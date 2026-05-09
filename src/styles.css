@@ -1,1 +1,74 @@
 /* You can add global styles to this file, and also import other style files */
+@import "bootstrap/dist/css/bootstrap.min.css";
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Layout & Spacing */
+  --radius: 0.75rem;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* CSS Variables - Light Mode */
+  --background: oklch(0.984 0.002 247);      /* #F8F9FA */
+  --foreground: oklch(0.22 0.02 250);       /* Soft Black */
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.22 0.02 250);
+  --primary: oklch(0.585 0.22 263);         /* #0D6EFD */
+  --primary-foreground: oklch(0.99 0 0);
+  --muted: oklch(0.96 0.005 247);
+  --muted-foreground: oklch(0.52 0.015 250);
+  --border: oklch(0.92 0.005 247);
+  
+  /* Shadows */
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.04), 0 4px 16px oklch(0 0 0 / 0.04);
+}
+
+.dark {
+  /* CSS Variables - Dark Mode */
+  --background: oklch(0.165 0 0);            /* #121212 */
+  --foreground: oklch(0.95 0.005 247);
+  --card: oklch(0.225 0 0);                 /* #1E1E1E */
+  --card-foreground: oklch(0.95 0.005 247);
+  --primary: oklch(0.475 0.085 248);         /* #375a7f */
+  --primary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.27 0 0);
+  --muted-foreground: oklch(0.68 0.01 247);
+  --border: oklch(1 0 0 / 0.08);
+}
+
+/* Globala Angular-stilar som mappar mot variablerna */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  min-height: 100vh;
+}
+
+/* Bootstrap Component Overrides */
+.card {
+  background-color: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-soft);
+}
+
+.btn-primary {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: var(--primary-foreground);
+  border-radius: var(--radius);
+}
+
+/* Navbar override för att matcha din design */
+.navbar {
+  background-color: var(--card);
+  border-bottom: 1px solid var(--border);
+}
+
+.text-muted {
+  color: var(--muted-foreground) !important;
+}
