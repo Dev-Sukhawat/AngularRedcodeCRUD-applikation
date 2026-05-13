@@ -1,0 +1,47 @@
+<section class="container max-w-6xl pt-5 mt-5 pb-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Badge -->
+            <span class="badge-custom">
+                <span class="dot"></span> Soft, minimal CRUD
+            </span>
+
+            <!-- Hero Title -->
+            <h1 class="hero-title mt-4">
+                Your library, <br />
+                <span class="text-muted">beautifully simple.</span>
+            </h1>
+
+            <!-- Description -->
+            <p class="hero-desc mt-4">
+                Keep books and quotes in one calm place. No clutter, no friction — just
+                clean cards, soft shadows, and a single primary action.
+            </p>
+
+            <!-- Buttons -->
+            <div class="d-flex flex-wrap gap-3 mt-5">
+                <a routerLink="/register" class="btn btn-primary-custom">
+                    Get started <i class="fa-solid fa-arrow-right ms-2" style="font-size: 12px;"></i>
+                </a>
+                <a routerLink="/login" class="btn btn-outline-custom">
+                    Sign in
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="row mt-5 pt-4 g-4">
+        <div class="col-md-6">
+            <app-feature-card icon="fa-solid fa-book-open" title="Books"
+                desc="A tidy collection of titles you've read or want to read — add, edit, delete in a click.">
+            </app-feature-card>
+        </div>
+
+        <div class="col-md-6">
+            <app-feature-card icon="fa-solid fa-quote-left" title="Quotes"
+                desc="Capture lines that stay with you. Hover any quote to remove it instantly.">
+            </app-feature-card>
+        </div>
+    </div>
+</section>
