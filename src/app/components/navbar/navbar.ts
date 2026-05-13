@@ -24,7 +24,6 @@ export class Navbar {
   theme = this.themeService.theme; // Antar att detta är en Signal
 
   navItems = [
-    { to: '/main', label: 'Main' },
     { to: '/books', label: 'Books' },
     { to: '/quotes', label: 'Quotes' },
   ];
