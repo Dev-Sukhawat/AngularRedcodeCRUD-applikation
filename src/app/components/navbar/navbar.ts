@@ -1,9 +1,8 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
-import { ThemeService } from '../../services/theme.service'; // Skapa denna
-import { AuthService } from '../../services/auth.service'; // Skapa denna
-
+import { ThemeService } from '../../services/theme.service';
+import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-navbar',
   standalone: true,

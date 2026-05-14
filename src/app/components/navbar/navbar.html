@@ -3,7 +3,7 @@
     <div class="container-fluid max-w-6xl mx-auto h-14 d-flex align-items-center justify-content-between px-4">
 
         <!-- Logo -->
-        <a routerLink="/" class="fw-semibold text-decoration-none"
+        <a [routerLink]="user() ? '/books' : '/'" class="fw-semibold text-decoration-none"
             style="color: var(--foreground); font-size: 1.25rem;">
             <span style="color: var(--primary)">●</span> Library
         </a>
