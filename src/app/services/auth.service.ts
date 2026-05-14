@@ -2,6 +2,7 @@ import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { log } from 'node:console';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -17,11 +18,10 @@ export class AuthService {
   constructor() {
     // Vid uppstart: Kolla om vi är i webbläsaren och om det finns en token
     if (isPlatformBrowser(this.platformId)) {
-      const token = localStorage.getItem('token');
       const savedEmail = localStorage.getItem('userEmail');
+      const token = localStorage.getItem('token');
 
-      if (token && savedEmail) {
-        // Här kan man även lägga till ett anrop till backend för att validera token
+      if (savedEmail && token) {
         this.user.set({ email: savedEmail });
       }
     }
@@ -64,6 +64,7 @@ export class AuthService {
    */
   async signOut() {
     this.user.set(null);
+    console.log('Signing out...');
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
       localStorage.removeItem('userEmail');
@@ -73,11 +74,21 @@ export class AuthService {
   /**
    * Hjälpmetod för att spara sessionen
    */
-  private setSession(token: string, email: string) {
-    this.user.set({ email });
+  public setSession(token: string, email: string) {
     if (isPlatformBrowser(this.platformId)) {
+      console.log('Nu är vi i webbläsaren! Sparar...');
+
+      // 1. Spara fysiskt
       localStorage.setItem('token', token);
       localStorage.setItem('userEmail', email);
+
+      // 2. Uppdatera signalen HÄR INNE
+      this.user.set({ email: email });
+
+      console.log('LocalStorage innehåll:', localStorage.getItem('userEmail'));
+    } else {
+      // Detta kommer loggas i din terminal/node-konsol, inte i webbläsaren
+      console.warn('Försökte spara i localStorage på servern - detta fungerar inte!');
     }
   }
 }
