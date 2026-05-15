@@ -1,2 +1,44 @@
 <app-navbar></app-navbar>
-<p>quotes works!</p>
+<div class="container py-5" style="max-width: 800px;">
+    <header class="mb-4">
+        <p class="text-uppercase text-muted small tracking-wider mb-1">Inspiration</p>
+        <h1 class="display-6 fw-bold">Quotes</h1>
+    </header>
+
+    <div class="card p-3 mb-5">
+        <form [formGroup]="quoteForm" (ngSubmit)="add()">
+            <textarea formControlName="text" rows="3"
+                class="form-control border-0 shadow-none bg-transparent text-body resize-none p-2"
+                style="color: var(--muted-foreground) !important;"
+                placeholder="Capture a line worth remembering…"></textarea>
+
+            <div class="d-flex justify-content-end pt-3 border-top mt-2">
+                <button type="submit" [disabled]="quoteForm.invalid || adding()"
+                    class="btn btn-primary rounded-3 px-4 d-flex align-items-center gap-2">
+                    @if (adding()) { <span class="spinner-border spinner-border-sm"></span> }
+                    @else { <i class="fas fa-plus"></i> }
+                    Add quote
+                </button>
+            </div>
+        </form>
+    </div>
+
+    @if (loading()) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary"></div>
+    </div>
+    } @else if (quotes().length === 0) {
+    <div class="text-center py-5 rounded-4 empty-state-box">
+        <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-inline-flex p-3 mb-3">
+            <i class="fas fa-quote-left" style="font-size: 24px;"></i>
+        </div>
+        <p class="text-muted mb-0">No quotes yet.</p>
+    </div>
+    } @else {
+    <div class="d-flex flex-column gap-3">
+        @for (q of quotes(); track q.id) {
+        <app-quote-card [quote]="q" (delete)="remove(q.id)"></app-quote-card>
+        }
+    </div>
+    }
+</div>
