@@ -2,6 +2,7 @@ import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
+import { environment } from '../../environments/environment.development';
 import { log } from 'node:console';
 
 @Injectable({ providedIn: 'root' })
@@ -10,7 +11,7 @@ export class AuthService {
   private platformId = inject(PLATFORM_ID);
 
   // Din .NET Backend URL
-  private readonly apiUrl = 'http://localhost:5120/api/auth';
+  private readonly apiUrl = environment.apiUrl + '/Auth';
 
   // Signal för användarstate
   user = signal<{ email: string } | null>(null);
@@ -32,7 +33,7 @@ export class AuthService {
    */
   async login(email: string, password: string): Promise<boolean> {
     try {
-      // Vi använder firstValueFrom för att göra om Observable till Promise (likt async/await i React)
+      // Vi använder firstValueFrom för att göra om Observable till Promise så att vi kan använda async/await
       const response = await firstValueFrom(
         this.http.post<{ token: string; email: string }>(`${this.apiUrl}/login`, {
           email,
@@ -76,7 +77,7 @@ export class AuthService {
    */
   public setSession(token: string, email: string) {
     if (isPlatformBrowser(this.platformId)) {
-      console.log('Nu är vi i webbläsaren! Sparar...');
+      // console.log('Nu är vi i webbläsaren! Sparar...');
 
       // 1. Spara fysiskt
       localStorage.setItem('token', token);
@@ -85,7 +86,7 @@ export class AuthService {
       // 2. Uppdatera signalen HÄR INNE
       this.user.set({ email: email });
 
-      console.log('LocalStorage innehåll:', localStorage.getItem('userEmail'));
+      // console.log('LocalStorage innehåll:', localStorage.getItem('userEmail'));
     } else {
       // Detta kommer loggas i din terminal/node-konsol, inte i webbläsaren
       console.warn('Försökte spara i localStorage på servern - detta fungerar inte!');
