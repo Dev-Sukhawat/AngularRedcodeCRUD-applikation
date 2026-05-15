@@ -1,0 +1,21 @@
+.quote-card { transition: all 0.2s ease-in-out; }
+.quote-card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.06) !important; }
+
+/* Hanterar att knappen visas vid hover (som i din React-kod) */
+.delete-btn { opacity: 0; transition: opacity 0.2s; }
+.quote-card:hover .delete-btn { opacity: 1; }
+
+.quote-text {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
+
+.action-buttons {
+  opacity: 0;
+}
+.group:hover .action-buttons {
+  opacity: 1;
+}
+
+.delete-btn:hover { background-color: #fee2e2; color: #dc3545 !important; }

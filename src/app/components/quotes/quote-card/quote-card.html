@@ -1,0 +1,14 @@
+<div class="card border-1 shadow-sm rounded-4 p-4 quote-card group transition-all position-relative">
+    <div class="d-flex">
+        <p class="mb-0 flex-grow-1 pe-5 lead-sm quote-text d-flex align-items-center">
+            <span class="text-primary fw-bold me-1">“</span>
+            {{ quote().text }}
+            <span class="text-primary fw-bold ms-1">”</span>
+        </p>
+
+        <button (click)="delete.emit()" class="btn action-buttons btn-link text-muted rounded-1 hover-bg-light-danger"
+            aria-label="Delete">
+            <i class="far fa-trash-alt" style="font-size: 14px;"></i>
+        </button>
+    </div>
+</div>
