@@ -29,8 +29,6 @@ export class LoginPage {
       if (isPlatformBrowser(this.platformId)) {
         if (params['success'] === 'true') {
           const googleEmail = params['email'];
-          console.log('Google login detekterad i webbläsaren för:', googleEmail);
-
           this.authService.setSession('fake-google-token', googleEmail);
           this.router.navigate(['/books']);
         }

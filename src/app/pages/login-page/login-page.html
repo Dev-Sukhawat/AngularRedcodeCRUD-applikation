@@ -11,7 +11,7 @@
                 <!-- Email Field -->
                 <div class="mb-3">
                     <label class="form-label small fw-medium" style="color: var(--muted-foreground);">Email</label>
-                    <input type="email" name="email" [(ngModel)]="email" class="form-control form-control-lg fs-6"
+                    <input type="email" name="email" [(ngModel)]="email" autocomplete="email" class="form-control form-control-lg fs-6"
                         placeholder="you@example.com" required
                         style="background-color: transparent; border-color: var(--border); color: var(--foreground);">
                 </div>
@@ -19,7 +19,7 @@
                 <!-- Password Field -->
                 <div class="mb-3">
                     <label class="form-label small fw-medium" style="color: var(--muted-foreground);">Password</label>
-                    <input type="password" name="password" [(ngModel)]="password"
+                    <input type="password" name="password" [(ngModel)]="password" autocomplete="current-password"
                         class="form-control form-control-lg fs-6" placeholder="••••••••" required
                         style="background-color: transparent; border-color: var(--border); color: var(--foreground);">
                 </div>
