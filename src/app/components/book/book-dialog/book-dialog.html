@@ -1,0 +1,42 @@
+<div class="modal-backdrop-custom d-flex align-items-center justify-content-center p-3" (click)="close.emit()">
+    <div class="card border-0 shadow-lg rounded-4 w-100" style="max-width: 450px;" (click)="$event.stopPropagation()">
+
+        <div class="card-body p-4">
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h2 class="h5 fw-semibold mb-0">{{ book() ? 'Edit book' : 'Add book' }}</h2>
+                <button (click)="close.emit()" class="btn btn-link text-muted p-1 rounded-3 hover-bg-light">
+                    <i class="fas fa-times" style="font-size: 16px;"></i>
+                </button>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="submit()">
+                <div class="mb-3">
+                    <label class="form-label small fw-medium text-muted mb-2">Title</label>
+                    <input type="text" formControlName="title" class="form-control auth-input text-muted"
+                        placeholder="The Pragmatic Programmer" autofocus>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label small fw-medium text-muted mb-2">Author</label>
+                    <input type="text" formControlName="author" class="form-control auth-input text-muted"
+                        placeholder="Andrew Hunt">
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="button" (click)="close.emit()"
+                        class="btn btn-outline-secondary flex-grow-1 py-2 rounded-3 border-1 text-dark fw-medium bg-white">
+                        Cancel
+                    </button>
+                    <button type="submit" [disabled]="form.invalid || saving"
+                        class="btn btn-primary flex-grow-1 py-2 rounded-3 fw-medium d-flex align-items-center justify-content-center gap-2">
+                        @if (saving) {
+                        <div class="spinner-border spinner-border-sm" role="status"></div>
+                        }
+                        {{ book() ? 'Save' : 'Add' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+</div>
