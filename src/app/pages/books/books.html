@@ -1,2 +1,48 @@
 <app-navbar></app-navbar>
-<p>books works!</p>
+<div class="container py-5">
+    <header class="d-flex justify-content-between align-items-end mb-4">
+        <div>
+            <p class="text-uppercase text-muted mb-1 small tracking-wider">Your shelf</p>
+            <h1 class="display-6 fw-semibold mb-0">Library</h1>
+        </div>
+        <button (click)="openCreate()" class="btn btn-primary px-4 py-2 shadow-sm d-flex align-items-center gap-2">
+            <i class="fa-solid fa-plus"></i> Add Book
+        </button>
+    </header>
+
+    <hr class="mb-5 opacity-10">
+
+    @if (loading()) {
+    <div class="d-flex justify-content-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+    </div>
+    } @else if (books().length === 0) {
+    <div class="text-center py-5 border border-dashed rounded-4 bg-background-color">
+        <div class="icon-wrapper">
+            <i class="fa-solid fa-book-open text-primary mb-3 display-5"></i>
+        </div>
+        <h3 class="h5 fw-bold">No books yet</h3>
+        <p class="text-muted">Add your first title to get started.</p>
+        <button (click)="openCreate()" class="btn btn-outline-primary mt-2">
+            <i class="fa-solid fa-plus"></i> Add Book
+        </button>
+    </div>
+    } @else {
+    <div class="row g-4">
+        @for (book of books(); track book.id) {
+        <div class="col-12 col-md-6 col-lg-4">
+            <app-book-card [book]="book" (edit)="openEdit(book)" (delete)="handleDelete(book.id)">
+            </app-book-card>
+        </div>
+        }
+    </div>
+    }
+
+    @if (isDialogOpen()) {
+    <app-book-dialog [book]="selectedBook()" (close)="isDialogOpen.set(false)"
+        (saved)="loadBooks(); isDialogOpen.set(false)">
+    </app-book-dialog>
+    }
+</div>
