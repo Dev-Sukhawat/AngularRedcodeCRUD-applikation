@@ -11,7 +11,7 @@ export class AuthService {
   private platformId = inject(PLATFORM_ID);
 
   // Din .NET Backend URL
-  private readonly apiUrl = environment.apiUrl + '/Auth';
+  private readonly apiUrl = environment.apiUrl + '/auth';
 
   // Signal för användarstate
   user = signal<{ email: string } | null>(null);
@@ -48,6 +48,27 @@ export class AuthService {
       return false;
     } catch (error) {
       console.error('Login failed:', error);
+      return false;
+    }
+  }
+
+  async register(name: string, email: string, password: string): Promise<boolean> {
+    try {
+      const response = await firstValueFrom(
+        this.http.post<{ token: string; email: string }>(`${this.apiUrl}/register`, {
+          name,
+          email,
+          password,
+        }),
+      );
+
+      if (response && response.token) {
+        this.setSession(response.token, response.email);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Register failed:', error);
       return false;
     }
   }
