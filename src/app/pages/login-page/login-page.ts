@@ -29,8 +29,15 @@ export class LoginPage {
       if (isPlatformBrowser(this.platformId)) {
         if (params['success'] === 'true') {
           const googleEmail = params['email'];
-          this.authService.setSession('fake-google-token', googleEmail);
-          this.router.navigate(['/books']);
+          const googleToken = params['token'];
+
+          if (googleToken) {
+            // 2. Använd den riktiga token istället för 'fake-google-token'
+            this.authService.setSession(googleToken, googleEmail);
+            this.router.navigate(['/books']);
+          } else {
+            console.error('No token found in Google response URL');
+          }
         }
       }
     });
