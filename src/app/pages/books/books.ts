@@ -1,8 +1,9 @@
-import { Component, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit, inject } from '@angular/core';
 import { Navbar } from '../../components/navbar/navbar';
 import { BookCard } from '../../components/book/book-card/book-card';
 import { BookDialog } from '../../components/book/book-dialog/book-dialog';
 import { Book } from '../../models/book-quote.model';
+import { ApiService } from '../../services/api.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,28 +12,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: './books.html',
   styleUrl: './books.css',
 })
-export class Books {
-  books = signal<Book[]>([
-    {
-      id: '1',
-      title: 'The Pragmatic Programmer',
-      author: 'Andrew Hunt & David Thomas',
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: '2',
-      title: 'Clean Code',
-      author: 'Robert C. Martin',
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: '3',
-      title: 'Angular Pro Tips',
-      author: 'Gemini Expert',
-      created_at: new Date().toISOString(),
-    },
-  ]);
-
+export class Books implements OnInit {
+  private apiService = inject(ApiService);
+  books = signal<Book[]>([]);
   loading = signal(false);
   isDialogOpen = signal(false);
   selectedBook = signal<Book | null>(null);
@@ -43,9 +25,16 @@ export class Books {
 
   async loadBooks() {
     this.loading.set(true);
-    // Här anropar du din service senare (t.ex. Supabase eller .NET API)
-    // Exempel: this.books.set(await this.bookService.getAll());
-    this.loading.set(false);
+    this.apiService.getBooks().subscribe({
+      next: (userBooks) => {
+        this.books.set(userBooks);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        console.error('Can not load books:', err);
+        this.loading.set(false);
+      },
+    });
   }
 
   openCreate() {
@@ -59,8 +48,22 @@ export class Books {
   }
 
   handleDelete(id: string) {
-    if (confirm('Delete this book?')) {
-      // Logik för delete här
+    if (
+      confirm(
+        'Are you sure you want to delete this book? All associated quotes will also be deleted.',
+      )
+    ) {
+      this.loading.set(true);
+      this.apiService.deleteBook(id).subscribe({
+        next: () => {
+          console.log('Book deleted successfully');
+          this.loadBooks();
+        },
+        error: (err) => {
+          console.error('Can not delete book:', err);
+          this.loading.set(false);
+        },
+      });
     }
   }
 }

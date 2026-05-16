@@ -3,7 +3,7 @@
 
         <div class="card-body p-4">
             <div class="d-flex align-items-center justify-content-between mb-4">
-                <h2 class="h5 fw-semibold mb-0">{{ book() ? 'Edit book' : 'Add book' }}</h2>
+                <h2 class="h5 fw-semibold mb-0">{{ mode }}</h2>
                 <button (click)="close.emit()" class="btn btn-link text-muted p-1 rounded-3 hover-bg-light">
                     <i class="fas fa-times" style="font-size: 16px;"></i>
                 </button>
@@ -32,7 +32,7 @@
                         @if (saving) {
                         <div class="spinner-border spinner-border-sm" role="status"></div>
                         }
-                        {{ book() ? 'Save' : 'Add' }}
+                        {{ book() ? 'Save Changes' : 'Create Book' }}
                     </button>
                 </div>
             </form>
