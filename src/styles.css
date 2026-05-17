@@ -31,7 +31,7 @@
   --foreground: oklch(0.95 0.005 247);
   --card: oklch(0.225 0 0);                 /* #1E1E1E */
   --card-foreground: oklch(0.95 0.005 247);
-  --primary: oklch(0.475 0.085 248);         /* #375a7f */
+  --primary: oklch(51.85% 0.10686 249.252);         /* #375a7f */
   --primary-foreground: oklch(0.98 0 0);
   --muted: oklch(0.27 0 0);
   --muted-foreground: oklch(0.68 0.01 247);
