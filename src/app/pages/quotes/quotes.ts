@@ -1,50 +1,49 @@
-import { Component, signal, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, signal, OnInit, inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { QuoteService } from '../../services/quote.service';
+import { ApiService } from '../../services/api.service';
 import { QuoteCard } from '../../components/quotes/quote-card/quote-card';
+import { QuoteDialog } from '../../components/quotes/quote-dialog/quote-dialog';
 import { Navbar } from '../../components/navbar/navbar';
-import { text } from 'stream/consumers';
+import { Quote } from '../../models/book-quote.model';
 
 @Component({
   selector: 'app-quotes',
-  imports: [Navbar, QuoteCard, CommonModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [Navbar, QuoteCard, QuoteDialog, CommonModule, ReactiveFormsModule],
   templateUrl: './quotes.html',
   styleUrl: './quotes.css',
 })
 export class Quotes implements OnInit {
-  private quoteService = inject(QuoteService);
+  private apiService = inject(ApiService);
   private fb = inject(FormBuilder);
+  private platformId = inject(PLATFORM_ID);
 
-  quotes = signal<any[]>([
-    {
-      id: '1',
-      title: 'The Pragmatic Programmer',
-      text: 'Raction is great for building UIs!',
-      created_at: new Date().toISOString(),
-    },
-    {
-      id: '2',
-      title: 'Clean Code',
-      text: 'Even bad code can function. But ugly code has a negative impact on the team.',
-      created_at: new Date().toISOString(),
-    },
-  ]);
+  isDialogOpen = signal(false);
+  selectedQuote = signal<Quote | null>(null);
+
+  quotes = signal<Quote[]>([]);
   loading = signal(true);
   adding = signal(false);
 
   quoteForm = this.fb.group({
-    text: ['', [Validators.required, Validators.minLength(3)]],
+    title: ['', [Validators.minLength(2), Validators.maxLength(100)]],
+    text: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(500)]],
+    pageNumber: [null as number | null, [Validators.min(1)]],
   });
 
   ngOnInit() {
-    this.load();
+    if (isPlatformBrowser(this.platformId)) {
+      this.load();
+    } else {
+      this.loading.set(false);
+    }
   }
 
   load() {
     this.loading.set(true);
-    this.quoteService.getQuotes().subscribe({
-      next: (data) => {
+    this.apiService.getQuotes().subscribe({
+      next: (data: Quote[]) => {
         this.quotes.set(data);
         this.loading.set(false);
       },
@@ -55,9 +54,14 @@ export class Quotes implements OnInit {
   add() {
     if (this.quoteForm.invalid) return;
     this.adding.set(true);
-    const text = this.quoteForm.value.text!;
 
-    this.quoteService.addQuote(text).subscribe({
+    const newQuoteData = {
+      text: this.quoteForm.value.text!,
+      title: this.quoteForm.value.title?.trim() || null,
+      pageNumber: this.quoteForm.value.pageNumber ? Number(this.quoteForm.value.pageNumber) : null,
+    };
+
+    this.apiService.createQuote(newQuoteData).subscribe({
       next: () => {
         this.quoteForm.reset();
         this.adding.set(false);
@@ -67,14 +71,33 @@ export class Quotes implements OnInit {
     });
   }
 
+  openEdit(quote: Quote) {
+    this.selectedQuote.set(quote);
+    this.isDialogOpen.set(true);
+  }
+
+  update(
+    id: string,
+    updatedData: { text: string; title: string | null; pageNumber: number | null },
+  ) {
+    this.apiService.updateQuote(id, updatedData).subscribe({
+      next: () => {
+        this.isDialogOpen.set(false); // Stäng dialogen
+        this.load();
+      },
+      error: (err) => {
+        console.error('API-fel vid uppdatering:', err);
+      },
+    });
+  }
+
   remove(id: string) {
-    // Optimistisk uppdatering (som i din React-kod)
     const original = this.quotes();
     this.quotes.update((q) => q.filter((x) => x.id !== id));
 
-    this.quoteService.deleteQuote(id).subscribe({
+    this.apiService.deleteQuote(id).subscribe({
       error: () => {
-        this.quotes.set(original); // Ångra om det skiter sig
+        this.quotes.set(original);
         alert('Could not delete quote');
       },
     });

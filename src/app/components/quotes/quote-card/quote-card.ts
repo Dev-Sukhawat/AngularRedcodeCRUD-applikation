@@ -1,5 +1,5 @@
 import { Component, input, output } from '@angular/core';
-import { Quote, Book } from '../../../models/book-quote.model';
+import { Quote } from '../../../models/book-quote.model';
 
 @Component({
   selector: 'app-quote-card',
@@ -9,9 +9,7 @@ import { Quote, Book } from '../../../models/book-quote.model';
   styleUrl: './quote-card.css',
 })
 export class QuoteCard {
-  // Vi kräver att ett Quote-objekt skickas in
   quote = input.required<Quote>();
-
-  // Event som skickas ut när man trycker på delete
+  edit = output<void>();
   delete = output<void>();
 }

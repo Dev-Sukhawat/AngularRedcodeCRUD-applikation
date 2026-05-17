@@ -7,18 +7,27 @@
 
     <div class="card p-3 mb-5">
         <form [formGroup]="quoteForm" (ngSubmit)="add()">
-            <textarea formControlName="text" rows="3"
-                class="form-control border-0 shadow-none bg-transparent text-body resize-none p-2"
-                style="color: var(--muted-foreground) !important;"
-                placeholder="Capture a line worth remembering…"></textarea>
+            <div class="d-flex justify-content-center">
+                <input type="text" id="quoteTitle" formControlName="title"
+                    class="form-control border-0 shadow-none bg-transparent text-body p-2 text-center fs-5 fw-bold border-bottom border-primary-subtle"
+                    style="color: var(--muted-foreground) !important;" placeholder="Give it a title…" />
+            </div>
+                <textarea formControlName="text" rows="3"
+                    class="form-control border-0 shadow-none bg-transparent text-body resize-none p-2"
+                    style="color: var(--muted-foreground) !important;" placeholder="Capture a line worth remembering…"></textarea>
+            <div class="d-flex justify-content-between align-items-center pt-3 mt-2">
+                <div class="d-flex align-items-center gap-2" style="max-width: 150px;">
+                    <span class="text-muted small">Page:</span>
+                    <input type="number" formControlName="pageNumber"
+                        class="form-control form-control-sm rounded-3 shadow-none text-center" placeholder="e.g. 42" min="1" />
+                </div>
 
-            <div class="d-flex justify-content-end pt-3 border-top mt-2">
                 <button type="submit" [disabled]="quoteForm.invalid || adding()"
                     class="btn btn-primary rounded-3 px-4 d-flex align-items-center gap-2">
                     @if (adding()) { <span class="spinner-border spinner-border-sm"></span> }
                     @else { <i class="fas fa-plus"></i> }
                     Add quote
-                </button>
+            </button>
             </div>
         </form>
     </div>
@@ -35,10 +44,14 @@
         <p class="text-muted mb-0">No quotes yet.</p>
     </div>
     } @else {
-    <div class="d-flex flex-column gap-3">
-        @for (q of quotes(); track q.id) {
-        <app-quote-card [quote]="q" (delete)="remove(q.id)"></app-quote-card>
+        <div class="d-flex flex-column gap-3">
+            @for (q of quotes(); track q.id) {
+            <app-quote-card [quote]="q" (delete)="remove(q.id!)" (edit)="openEdit(q)"> </app-quote-card>
+            }
+            </div>
+        @if (isDialogOpen()) {
+        <app-quote-dialog [quote]="selectedQuote()" (close)="isDialogOpen.set(false)"
+            (saved)="update(selectedQuote()!.id!, $event)"> </app-quote-dialog>
         }
-    </div>
     }
 </div>
