@@ -5,6 +5,7 @@ import { Navbar } from '../../components/navbar/navbar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-register-page',
@@ -18,19 +19,26 @@ export class RegisterPage {
   private route = inject(ActivatedRoute);
   private platformId = inject(PLATFORM_ID);
 
-  name = ''; // Nytt fält för namn
+  private readonly apiUrl = environment.apiUrl + '/auth';
+
+  name = '';
   email = '';
   password = '';
   loading = signal(false);
 
   constructor() {
     this.route.queryParams.subscribe((params) => {
-      // Hantera Google-retur även vid registrering (Google sköter båda)
       if (isPlatformBrowser(this.platformId)) {
         if (params['success'] === 'true') {
           const googleEmail = params['email'];
-          this.authService.setSession('fake-google-token', googleEmail);
-          this.router.navigate(['/books']);
+          const googleToken = params['token'];
+
+          if (googleToken) {
+            this.authService.setSession(googleToken, googleEmail);
+            this.router.navigate(['/books']);
+          } else {
+            console.error('No token found in Google response URL');
+          }
         }
       }
     });
@@ -67,6 +75,6 @@ export class RegisterPage {
 
   onGoogleSignIn() {
     // Samma Google-endpoint fungerar oftast för både login och signup
-    window.location.href = 'http://localhost:5120/api/auth/google-login';
+    window.location.href = `${this.apiUrl}/google-login`;
   }
 }
