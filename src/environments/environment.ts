@@ -1,4 +1,4 @@
 export const environment = {
-  production: false,
+  production: true,
   apiUrl: 'https://library-api-backend-xmzm.onrender.com/api',
 };
