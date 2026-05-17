@@ -3,7 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { environment } from '../../environments/environment.development';
-import { log } from 'node:console';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -17,13 +16,13 @@ export class AuthService {
   user = signal<{ email: string } | null>(null);
 
   constructor() {
-    // Vid uppstart: Kolla om vi är i webbläsaren och om det finns en token
     if (isPlatformBrowser(this.platformId)) {
       const savedEmail = localStorage.getItem('userEmail');
-      const token = localStorage.getItem('token');
 
-      if (savedEmail && token) {
+      if (savedEmail && this.isTokenValid()) {
         this.user.set({ email: savedEmail });
+      } else {
+        this.signOut();
       }
     }
   }
@@ -77,12 +76,11 @@ export class AuthService {
    * Hantera Google Redirect
    */
   loginWithGoogle() {
-    // Skickar användaren till din .NET endpoint som hanterar Google Challenge
     window.location.href = `${this.apiUrl}/google-login`;
   }
 
   /**
-   * Logga ut
+   * Logut
    */
   async signOut() {
     this.user.set(null);
@@ -98,19 +96,34 @@ export class AuthService {
    */
   public setSession(token: string, email: string) {
     if (isPlatformBrowser(this.platformId)) {
-      // console.log('Nu är vi i webbläsaren! Sparar...');
-
-      // 1. Spara fysiskt
       localStorage.setItem('token', token);
       localStorage.setItem('userEmail', email);
 
       // 2. Uppdatera signalen HÄR INNE
       this.user.set({ email: email });
-
-      // console.log('LocalStorage innehåll:', localStorage.getItem('userEmail'));
     } else {
-      // Detta kommer loggas i din terminal/node-konsol, inte i webbläsaren
-      console.warn('Försökte spara i localStorage på servern - detta fungerar inte!');
+      console.warn('Trying to set session on the server side, which is not supported.');
+    }
+  }
+
+  isTokenValid(): boolean {
+    if (!isPlatformBrowser(this.platformId)) return false;
+
+    const token = localStorage.getItem('token');
+    if (!token) return false;
+
+    try {
+      const payloadBase64 = token.split('.')[1];
+      const payloadJson = atob(payloadBase64);
+      const payload = JSON.parse(payloadJson);
+
+      const expiryTime = payload.exp * 1000;
+      const currentTime = Date.now();
+
+      return currentTime < expiryTime;
+    } catch (error) {
+      console.error('Could not validate or decode token:', error);
+      return false;
     }
   }
 }
