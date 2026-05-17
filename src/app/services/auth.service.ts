@@ -84,7 +84,6 @@ export class AuthService {
    */
   async signOut() {
     this.user.set(null);
-    console.log('Signing out...');
     if (isPlatformBrowser(this.platformId)) {
       localStorage.removeItem('token');
       localStorage.removeItem('userEmail');
