@@ -40,19 +40,18 @@ export class BookDialog implements OnInit {
 
     this.saving = true;
 
-    // 4. Hämta värdena från ditt formulär
     const formValues = {
       title: this.form.value.title ?? '',
       author: this.form.value.author ?? '',
     };
 
-    console.log('Formulärvärden att skicka till API:', formValues);
+    console.log('Form values:', formValues);
 
     const currentBook = this.book();
 
     if (currentBook && currentBook.id) {
-      this.apiService.uppdateBook(currentBook.id, formValues).subscribe({
-        next: (uppdatedBook) => {
+      this.apiService.updateBook(currentBook.id, formValues).subscribe({
+        next: (updatedBook) => {
           this.saving = false;
           this.saved.emit();
         },
@@ -68,13 +67,13 @@ export class BookDialog implements OnInit {
       this.apiService.createBook(formValues).subscribe({
         next: (savedBook) => {
           this.saving = false;
-          this.saved.emit(); // Säg till listan/föräldern att boken är sparad så den kan stängas och laddas om!
+          this.saved.emit();
         },
         error: (err) => {
           this.saving = false;
-          console.error('Kunde inte spara boken i PostgreSQL:', err);
+          console.error('Could not create book in PostgreSQL:', err);
           alert(
-            'Något gick fel när boken skulle sparas. Kontrollera att du är ordentligt inloggad.',
+            'Something went wrong when creating the book. Please check that you are properly logged in.',
           );
         },
       });
