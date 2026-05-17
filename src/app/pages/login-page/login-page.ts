@@ -5,6 +5,7 @@ import { Navbar } from '../../components/navbar/navbar';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-login-page',
@@ -18,6 +19,8 @@ export class LoginPage {
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private platformId = inject(PLATFORM_ID);
+
+  private readonly apiUrl = environment.apiUrl + '/auth';
 
   email = '';
   password = '';
@@ -63,6 +66,6 @@ export class LoginPage {
   onGoogleSignIn() {
     // För Google behöver du oftast en extern URL till din backend
     // eller använda Google Identity Services biblioteket.
-    window.location.href = 'http://localhost:5120/api/auth/google-login';
+    window.location.href = `${this.apiUrl}/google-login`;
   }
 }
