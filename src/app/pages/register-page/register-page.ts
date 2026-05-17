@@ -75,6 +75,6 @@ export class RegisterPage {
 
   onGoogleSignIn() {
     // Samma Google-endpoint fungerar oftast för både login och signup
-    window.location.href = `${this.apiUrl}/google-login`;
+    window.open(`${this.apiUrl}/google-login`, '_blank');
   }
 }

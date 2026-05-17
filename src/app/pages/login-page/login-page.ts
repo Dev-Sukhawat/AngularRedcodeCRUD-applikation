@@ -66,6 +66,6 @@ export class LoginPage {
   onGoogleSignIn() {
     // För Google behöver du oftast en extern URL till din backend
     // eller använda Google Identity Services biblioteket.
-    window.location.href = `${this.apiUrl}/google-login`;
+    window.open(`${this.apiUrl}/google-login`, '_blank');
   }
 }
