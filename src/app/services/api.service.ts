@@ -12,12 +12,12 @@ export class ApiService {
   private apiUrl = environment.apiUrl;
   private http = inject(HttpClient);
 
-  // === BÖCKER ===
+  // === Books ===
   getBooks(): Observable<Book[]> {
     return this.http.get<Book[]>(`${this.apiUrl}/books`);
   }
 
-  uppdateBook(id: string, book: Partial<Book>): Observable<Book> {
+  updateBook(id: string, book: Partial<Book>): Observable<Book> {
     return this.http.put<Book>(`${this.apiUrl}/books/${id}`, book);
   }
 
@@ -29,15 +29,30 @@ export class ApiService {
     return this.http.delete<void>(`${this.apiUrl}/books/${id}`);
   }
 
-  // === CITAT ===
-  getQuotesForBook(bookId: string): Observable<Quote[]> {
-    return this.http.get<Quote[]>(`${this.apiUrl}/quotes/book/${bookId}`);
+  // === Quotes ===
+  // Get Quote
+  getQuotes(): Observable<Quote[]> {
+    return this.http.get<Quote[]>(`${this.apiUrl}/quotes`);
   }
 
-  createQuote(quote: Partial<Quote>): Observable<Quote> {
-    return this.http.post<Quote>(`${this.apiUrl}/quotes`, quote);
+  // Create Quote
+  createQuote(quoteData: {
+    text: string;
+    title?: string | null;
+    pageNumber?: number | null;
+  }): Observable<Quote> {
+    return this.http.post<Quote>(`${this.apiUrl}/quotes`, quoteData);
   }
 
+  // Update Quote
+  updateQuote(
+    id: string,
+    quoteData: { text: string; title: string | null; pageNumber: number | null },
+  ): Observable<Quote> {
+    return this.http.put<Quote>(`${this.apiUrl}/quotes/${id}`, quoteData);
+  }
+
+  // Remove Quote
   deleteQuote(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/quotes/${id}`);
   }
