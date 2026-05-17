@@ -2,32 +2,48 @@
     style="background-color: var(--background); backdrop-filter: blur(8px); border-color: var(--border) !important; padding: 0.5rem;">
     <div class="container-fluid max-w-6xl mx-auto h-14 d-flex align-items-center justify-content-between px-4">
 
-        <!-- Logo -->
         <a [routerLink]="user() ? '/books' : '/'" class="fw-semibold text-decoration-none"
             style="color: var(--foreground); font-size: 1.25rem;">
-            <span style="color: var(--primary)">●</span> Library
-        </a>
-
-        <!-- Desktop Nav -->
-        <nav class="d-none d-md-flex align-items-center gap-3">
-            @if (user()) {
-            @for (item of navItems; track item.to) {
-            <a [routerLink]="item.to" routerLinkActive="active-link" class="text-decoration-none px-2 py-1"
-                style="color: var(--muted-foreground); font-size: 14px;">
-                {{ item.label }}
+            <span style="color: var(--primary)">●</span> <span class="d-none d-sm-inline">Library</span>
             </a>
-            }
-            }
+            
+            @if (user()) {
+            <div class="d-flex d-md-none bg-light rounded p-1" style="background-color: var(--border) !important; gap: 2px;">
+                <a routerLink="/books" routerLinkActive="bg-white shadow-sm fw-medium text-dark"
+                    [routerLinkActiveOptions]="{exact: true}" class="text-decoration-none rounded px-3 py-1 text-center"
+                    style="font-size: 13px; color: var(--muted-foreground); transition: all 0.2s;">
+                    Books
+                </a>
+                <a routerLink="/quotes" routerLinkActive="bg-white shadow-sm fw-medium text-dark"
+                    class="text-decoration-none rounded px-3 py-1 text-center"
+                    style="font-size: 13px; color: var(--muted-foreground); transition: all 0.2s;">
+                    Quotes
+                </a>
+        </div>
+        }
+        
+        <nav class="d-flex align-items-center gap-2 gap-md-3">
 
-            <!-- Theme Toggle -->
+            <div class="d-none d-md-flex align-items-center gap-3">
+                @if (user()) {
+                @for (item of navItems; track item.to) {
+                <a [routerLink]="item.to" routerLinkActive="active-link" class="text-decoration-none px-2 py-1"
+                    style="color: var(--muted-foreground); font-size: 14px;">
+                    {{ item.label }}
+                </a>
+                }
+                }
+            </div>
+
             <button (click)="toggleTheme()" class="btn btn-link p-2 text-decoration-none"
                 style="color: var(--muted-foreground)">
                 <i class="fa-solid" [class.fa-sun]="theme() === 'dark'" [class.fa-moon]="theme() === 'light'"></i>
             </button>
 
             @if (user()) {
-            <button (click)="onSignOut()" class="btn btn-sm ms-2" style="color: var(--foreground)">
-                <i class="fa-solid fa-right-from-bracket me-1"></i> Sign out
+            <button (click)="onSignOut()" class="btn btn-sm ms-1 ms-md-2" style="color: var(--foreground)">
+                <i class="fa-solid fa-right-from-bracket" [class.me-1]="true"></i>
+                <span class="d-none d-sm-inline">Sign out</span>
             </button>
             } @else {
             <a routerLink="/login" class="btn btn-primary btn-sm px-3">
